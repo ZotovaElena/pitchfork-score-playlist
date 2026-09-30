@@ -7,6 +7,42 @@ Spotify playlists. Python 3.10+.
 pip install pandas python-dotenv spotipy tqdm pylast
 ```
 
+## Environment setup (API keys and client IDs)
+
+`fork_fetch.py` and `fork_wayback.py` need no credentials. The Last.fm genre
+lookup and the Spotify playlist builder do. Both read their credentials from a
+`.env` file in the project root (loaded with `python-dotenv`); `.env` is
+gitignored — never commit it or paste keys into code.
+
+```dotenv
+# Last.fm — used by fork_prepare.py / genre_annotator.py
+LASTFM_API_KEY=
+LASTFM_API_SECRET=
+LASTFM_USERNAME=          # optional
+LASTFM_PASSWORD=          # optional
+
+# Spotify — used by fork_playlist.py
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_REDIRECT_URI=     # only needed for --push
+```
+
+| Variable | Required for | Where to get it |
+|---|---|---|
+| `LASTFM_API_KEY`, `LASTFM_API_SECRET` | `fork_prepare.py` genre-fill (skip with `--no-genre`) | Create an API account at <https://www.last.fm/api/account/create> |
+| `LASTFM_USERNAME`, `LASTFM_PASSWORD` | Nothing for read-only tag lookups; optional | Your Last.fm login (the password is MD5-hashed before use) |
+| `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` | `fork_playlist.py` matching/preview | Create an app at <https://developer.spotify.com/dashboard> |
+| `SPOTIFY_REDIRECT_URI` | `fork_playlist.py --push` | Set it in your Spotify app's settings, and use the exact same string in `.env` |
+
+Notes:
+
+- The Spotify redirect URI must match one registered in the app dashboard
+  character for character (e.g. `http://127.0.0.1:8888/callback`).
+- The names are the project's own `SPOTIFY_*` ones, not spotipy's default
+  `SPOTIPY_*`; the code reads them explicitly.
+- `--push` stores the OAuth login token in `.spotify_token_cache` (gitignored).
+  Delete it to force a fresh login.
+
 ## Pipeline
 
 ```
