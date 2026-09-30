@@ -11,8 +11,7 @@ pip install pandas python-dotenv spotipy tqdm pylast
 
 `fork_fetch.py` and `fork_wayback.py` need no credentials. The Last.fm genre
 lookup and the Spotify playlist builder do. Both read their credentials from a
-`.env` file in the project root (loaded with `python-dotenv`); `.env` is
-gitignored — never commit it or paste keys into code.
+`.env` file in the project root (loaded with `python-dotenv`).
 
 ```dotenv
 # Last.fm — used by fork_prepare.py / genre_annotator.py
